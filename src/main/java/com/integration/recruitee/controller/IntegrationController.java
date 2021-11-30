@@ -1,29 +1,29 @@
 package com.integration.recruitee.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integration.recruitee.model.Offers;
 import com.integration.recruitee.model.Payload;
 import com.integration.recruitee.model.RecrutieeResponse;
+import com.integration.recruitee.model.Root;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/integration")
@@ -34,17 +34,18 @@ public class IntegrationController {
 
     @GetMapping("/api")
     public CompletableFuture<String> integrationByRecrutiee(@RequestBody RecrutieeResponse recrutieeResponse)
-            throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
+            throws IOException, InterruptedException {
 
         //Important
-        Payload payload = recrutieeResponse.payload;
-        String ToPipeLine = payload.details.toStage.name;
-        String candidateName = payload.getCandidate().name;
-        String contactNo = payload.getCandidate().phones.get(0).toString();
-        String appliedPosition = payload.getOffer().title;
-        String companyName = payload.getCompany().name;
+        Payload payload = recrutieeResponse.getPayload();
+        String ToPipeLine = payload.getDetails().getToStage().getName();
+        String candidateName = payload.getCandidate().getName();
+        String contactNo = payload.getCandidate().getPhones().get(0).toString();
+        String appliedPosition = payload.getOffer().getTitle();
+        String companyName = payload.getCompany().getName();
         String message = "";
-
+        //method added for testing purpose.
+        viewOffers();
         switch (ToPipeLine) {
             case "Applied":
                 message = "Hi " + candidateName + "\n" +
@@ -137,4 +138,72 @@ public class IntegrationController {
 
         System.out.println(message.getSid());
     }
+
+    /**
+     * Available position in organization.
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    //FIXME
+    public  Map<String,String> viewOffers() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create("https://ideas2ittechnologies.recruitee.com/api/offers/"))
+                .GET()
+                .header("Accept", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient
+                .newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        String json = response.body();
+        Root root = new ObjectMapper()
+                .readValue(json, Root.class);
+        List<Offers> offersList = root
+                .getOffers()
+                .stream()
+                .collect(Collectors.toList());
+        //jobRoles contain slug & job title
+        Map<String,String> jobRoles = offersList
+                .stream()
+                .collect(Collectors.toMap(Offers::getSlug,Offers::getTitle));
+        //after choosing from whatsapp reply we can chose slug in this map.
+        return jobRoles;
+    }
+
+    /**
+     * new candidate creation
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public CompletableFuture<String> createCandidate() throws IOException, InterruptedException {
+        //FIXME
+        //receiving data from whatsapp response.(As of now values are hardcoded)
+        //RequestBody
+        Map<String,String>bodyParam=new HashMap<>();
+        bodyParam.put("name", "kowshik Bharathi M");
+        bodyParam.put("email", "kowshikbharathi.mani@idaes2it.com");
+        bodyParam.put("phone","8110886604");
+        bodyParam.put("remote_cv_url","cv url from trillio");
+
+        String requestBody = new ObjectMapper()
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bodyParam);
+
+        // Create HTTP request object
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create("https://ideas2ittechnologies.recruitee.com/api/offers/offer_slug/candidates"))
+                .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
+                .header("accept", "application/json")
+                .build();
+        return HttpClient
+                .newHttpClient()
+                .sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body);
+    }
+
+
 }

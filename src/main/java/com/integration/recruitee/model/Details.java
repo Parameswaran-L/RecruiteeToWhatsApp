@@ -2,6 +2,7 @@
 package com.integration.recruitee.model;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
     "from_stage",
     "to_stage"
 })
+@Data
 public class Details {
 
     @JsonProperty("from_stage")

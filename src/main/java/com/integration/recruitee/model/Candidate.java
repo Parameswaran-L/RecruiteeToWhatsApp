@@ -2,6 +2,7 @@
 package com.integration.recruitee.model;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Map;
     "source",
     "updated_at"
 })
+@Data
 public class Candidate {
 
     @JsonProperty("created_at")
