@@ -46,6 +46,7 @@ public class IntegrationController {
         String message = "";
         //method added for testing purpose.
         viewOffers();
+        createCandidate();
         switch (ToPipeLine) {
             case "Applied":
                 message = "Hi " + candidateName + "\n" +
@@ -182,11 +183,13 @@ public class IntegrationController {
         //FIXME
         //receiving data from whatsapp response.(As of now values are hardcoded)
         //RequestBody
+        //FIXME
+        String slug = viewOffers().get("Business Analyst");
         Map<String,String>bodyParam=new HashMap<>();
-        bodyParam.put("name", "kowshik Bharathi M");
-        bodyParam.put("email", "kowshikbharathi.mani@idaes2it.com");
-        bodyParam.put("phone","8110886604");
-        bodyParam.put("remote_cv_url","cv url from trillio");
+        bodyParam.put("name", "sample2");
+        bodyParam.put("email", "sample@gmail.com");
+        bodyParam.put("phone","1234567890");
+        bodyParam.put("remote_cv_url","C:\\Users\\Kowshik Bharathi M\\Desktop\\samplepdf");
 
         String requestBody = new ObjectMapper()
                 .writerWithDefaultPrettyPrinter()
@@ -195,7 +198,7 @@ public class IntegrationController {
         // Create HTTP request object
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create("https://ideas2ittechnologies.recruitee.com/api/offers/offer_slug/candidates"))
+                .uri(URI.create("https://ideas2ittechnologies.recruitee.com/api/offers/"+slug+"/candidates"))
                 .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
                 .header("accept", "application/json")
                 .build();
