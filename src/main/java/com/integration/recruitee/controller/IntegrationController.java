@@ -47,46 +47,57 @@ public class IntegrationController {
 
         switch (ToPipeLine) {
             case "Applied":
-                message = " Hi" + candidateName + "\n" +
-                        "Thank you for your interest to work at" + companyName + "for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
-                //seperate method for sandbox
+                message = "Hi " + candidateName + "\n" +
+                        "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
-            case "Discovery- Justin C":
-                //message = "Hi"+ candidateName + "you"
-                break;
             case "Ideas2IT - Intro":
-                message = " Hi" + candidateName + "\n" +
+                message = "Hi " + candidateName + "\n" +
                         " Ideas2IT is a great place to grow your career. You get the opportunity to chart your own career path, where you could choose to be a technical expert, entrepreneur, or even an entrepreneu. Please find JD" + " https://ideas2ittechnologies.recruitee.com/o/";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
             case "Ideas2IT | L1 Interview":
-                message = "Hi" + candidateName + "!!!" + "\n" + "Your Profile has been shortlisted for L1 interview process. Google meet invitation have sent to your register mail id";
+                message = "Hi " + candidateName  + "\n" +
+                        "\n" +
+                        "Congratulations!\n" +
+                        "\n" + "It was great connecting with you. Your Profile has been shortlisted for L1 interview process. Google meet invitation will be sent to your register mail address";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
             case "Final Interview":
-                message = "Hi" + candidateName + "\n" + "!!! Your have cleared L1 interview.";
+                message = "Hi" + candidateName  + "\n" +
+                        "\n" +
+                        "Congratulations!\n" +
+                        "\n" + "!!! Your have cleared L1 interview.Google meet invitation will be sent to your register mail address";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
             case "Rejection":
-                message = "Hi" + candidateName + "\n" + "Thank you for taking the time to meet with our team about the Java role at Ideas2IT. It was a pleasure to learn more about your skills and accomplishments.\n" +
+                message = "Hi " + candidateName + "\n" + "Thank you for taking the time to meet with our team about the "+appliedPosition +" at Ideas2IT. It was a pleasure to learn more about your skills and accomplishments.\n" +
                         "\n" +
                         "Unfortunately, our team did not select you for further consideration. Often there are some special needs for a particular role that influences this decision.";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
 
             case "HR Discussion":
+                message = "Hi " + candidateName  + "\n" +
+                        "\n" +
+                        "Congratulations!\n" +
+                        "\n" +"Your have cleared Final interview.Google meet invitation will be sent to your register mail address for HR Discussion\";";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
             case "Document Collection":
-                message = "Hi" + candidateName + "." + "\n" +
+                message = "Hi " + candidateName  + "\n" +
                         "\n" +
                         "Congratulations!\n" +
                         "\n" +
-                        "We have been impressed with your Interview background and Ideas2IT would like to formally offer you.Please share us required document which is mention mail sent to your registered mail id";
+                        "We have been impressed with your Interview background and Ideas2IT would like to formally offer you.Please share us required document which is mention in mail sent to your registered mail address";
                 callTwilioWhatsappApi(contactNo, message);
                 break;
-            case "Onboarded":
+            case "Offer":
+                message = "Hi " + candidateName  + "\n" +
+                        "\n" +
+                        "Congratulations!\n" +
+                        "\n" +"Congratulations on your offer from Ideas2IT! We are excited to bring you on board. Your offer letter is shared to your registered mail address" ;
+                callTwilioWhatsappApi(contactNo, message);
                 break;
             case "Ideas2IT: Immediate Joiners":
                 break;
@@ -99,6 +110,9 @@ public class IntegrationController {
             case "Ideas2IT: DOJ in 15 days":
                 break;
             case "Declined":
+                message = "Hi " + candidateName  + "\n" +
+                        "\n" +"We are sorry to see you go! You are welcome back anytime. We would have loved to work with you but understand your decision and wish you the very best!";
+                callTwilioWhatsappApi(contactNo, message);
                 break;
         }
 
