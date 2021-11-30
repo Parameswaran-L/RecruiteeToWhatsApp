@@ -11,7 +11,7 @@ import java.util.List;
         "offers"
 })
 @Data
-public class Root {
+public class OfferResponse {
 
     @JsonProperty("offers")
     public List<Offers> offers;

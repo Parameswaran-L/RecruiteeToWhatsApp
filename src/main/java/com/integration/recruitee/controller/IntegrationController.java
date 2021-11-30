@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.integration.recruitee.model.Offers;
 import com.integration.recruitee.model.Payload;
 import com.integration.recruitee.model.RecrutieeResponse;
-import com.integration.recruitee.model.Root;
+import com.integration.recruitee.model.OfferResponse;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -158,9 +158,9 @@ public class IntegrationController {
                 .newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
         String json = response.body();
-        Root root = new ObjectMapper()
-                .readValue(json, Root.class);
-        List<Offers> offersList = root
+        OfferResponse offerResponse = new ObjectMapper()
+                .readValue(json, OfferResponse.class);
+        List<Offers> offersList = offerResponse
                 .getOffers()
                 .stream()
                 .collect(Collectors.toList());
