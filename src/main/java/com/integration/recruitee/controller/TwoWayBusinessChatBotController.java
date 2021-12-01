@@ -10,6 +10,7 @@ import com.twilio.twiml.messaging.Media;
 import com.twilio.twiml.messaging.Message;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,16 +32,16 @@ public class TwoWayBusinessChatBotController {
     final String AUTH_TOKEN = "d80a19dd7e0435fa59184490d399e880";
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
-    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public String sendWelcomeMessage() throws IOException, InterruptedException {
         Map<String, String> offersMap = viewOffers();
         StringBuilder jobOpeningsStringBuilder = new StringBuilder();
 
         if (!offersMap.isEmpty()) {
             int jobId = 1;
+            jobOpeningsStringBuilder.append("Welcome to Ideas2It! \n Want to be Part of our great team, We're hiring for \n");
 
             for (Map.Entry<String, String> entry : offersMap.entrySet()) {
-                jobOpeningsStringBuilder.append("Welcome to Ideas2It! \n Want to be Part of our great team, We're hiring for \n");
                 jobOpeningsStringBuilder.append(jobId++);
                 jobOpeningsStringBuilder.append(". ");
                 jobOpeningsStringBuilder.append(entry.getValue());
