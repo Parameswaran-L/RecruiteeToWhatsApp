@@ -6,14 +6,7 @@ import com.integration.recruitee.model.OfferResponse;
 import com.integration.recruitee.model.Offers;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
-import com.twilio.twiml.messaging.Media;
 import com.twilio.twiml.messaging.Message;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,7 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/chatbot")
@@ -33,20 +32,31 @@ public class TwoWayBusinessChatBotController {
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @PostMapping(produces = MediaType.APPLICATION_XML_VALUE)
-    public String sendWelcomeMessage() throws IOException, InterruptedException {
+    public String sendWelcomeMessage(@RequestParam Map<String, String> parameters) throws IOException, InterruptedException {
+
+        Logger logger = Logger.getLogger(TwoWayBusinessChatBotController.class.getName());
+
+        parameters.forEach((k,v) -> logger.info("Key = "+k+ ", Value = " +v));
+
         Map<String, String> offersMap = viewOffers();
         StringBuilder jobOpeningsStringBuilder = new StringBuilder();
 
         if (!offersMap.isEmpty()) {
             int jobId = 1;
-            jobOpeningsStringBuilder.append("Welcome to Ideas2It! \n Want to be Part of our great team, We're hiring for \n");
-
+            jobOpeningsStringBuilder.append("Welcome to Ideas2It! \nWant to be Part of our great team, We're hiring for \n");
+            String firstPosition = null;
             for (Map.Entry<String, String> entry : offersMap.entrySet()) {
+                if(jobId==1)
+                {
+                    firstPosition = entry.getValue();
+                }
                 jobOpeningsStringBuilder.append(jobId++);
                 jobOpeningsStringBuilder.append(". ");
                 jobOpeningsStringBuilder.append(entry.getValue());
                 jobOpeningsStringBuilder.append("\n");
             }
+            jobOpeningsStringBuilder.append("\nReply with your option to apply \n\nExample : Reply 1 to apply for ")
+                    .append(firstPosition);
         } else {
             jobOpeningsStringBuilder.append("Thanks for Reaching to us, Presently there are no openings - Ideas2it HR Team");
         }
@@ -68,9 +78,9 @@ public class TwoWayBusinessChatBotController {
     /**
      * Available position in organization.
      *
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
+     * @return Return a list of Offers as in MAP
+     * @throws IOException Exception
+     * @throws InterruptedException Exception
      */
     //FIXME
     private Map<String, String> viewOffers() throws IOException, InterruptedException {
@@ -102,9 +112,9 @@ public class TwoWayBusinessChatBotController {
     /**
      * new candidate creation
      *
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
+     * @return Response from Recuruitee
+     * @throws IOException Exception
+     * @throws InterruptedException Exception
      */
     private CompletableFuture<String> createCandidate() throws IOException, InterruptedException {
         //FIXME
