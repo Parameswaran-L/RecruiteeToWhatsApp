@@ -38,14 +38,16 @@ public class TwoWayBusinessChatBotController {
         Logger logger = Logger.getLogger(TwoWayBusinessChatBotController.class.getName());
 
         requestParameters.forEach((k, v) -> logger.info("Key = " + k + ", Value = " + v));
+        StringBuilder jobOpeningsStringBuilder = new StringBuilder();
 
         switch (requestParameters.get("Body")) {
-            case "view":
-                break;
 
+            case "Hey": {
+                jobOpeningsStringBuilder.append("Hey there! We are excited as you are! \n");
+                break;
+            }
             default: {
                 Map<String, String> offersMap = viewOffers();
-                StringBuilder jobOpeningsStringBuilder = new StringBuilder();
 
                 if (!offersMap.isEmpty()) {
                     int jobId = 1;
@@ -65,22 +67,24 @@ public class TwoWayBusinessChatBotController {
                 } else {
                     jobOpeningsStringBuilder.append("Thanks for Reaching to us, Presently there are no openings - Ideas2it HR Team");
                 }
-
-                Body body = new Body
-                        .Builder(jobOpeningsStringBuilder.toString())
-                        .build();
-                Message whatsappMessage = new Message
-                        .Builder()
-                        .body(body)
-                        .build();
-                MessagingResponse twiml = new MessagingResponse
-                        .Builder()
-                        .message(whatsappMessage)
-                        .build();
-                return twiml.toXml();
             }
         }
-        return null;
+        if (jobOpeningsStringBuilder != null) {
+            Body body = new Body
+                    .Builder(jobOpeningsStringBuilder.toString())
+                    .build();
+            Message whatsappMessage = new Message
+                    .Builder()
+                    .body(body)
+                    .build();
+            MessagingResponse twiml = new MessagingResponse
+                    .Builder()
+                    .message(whatsappMessage)
+                    .build();
+
+            return twiml.toXml();
+        } else
+            return null;
     }
 
     /**
