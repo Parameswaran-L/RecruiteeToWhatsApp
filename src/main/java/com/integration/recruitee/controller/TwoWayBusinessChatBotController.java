@@ -7,6 +7,7 @@ import com.integration.recruitee.model.Offers;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.twiml.messaging.Message;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,54 +34,60 @@ public class TwoWayBusinessChatBotController {
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @PostMapping(produces = MediaType.APPLICATION_XML_VALUE)
-    public String sendWelcomeMessage(@RequestParam Map<String, String> parameters) throws IOException, InterruptedException {
-
+    public String sendWelcomeMessage(@RequestParam Map<String, String> requestParameters) throws IOException, InterruptedException {
         Logger logger = Logger.getLogger(TwoWayBusinessChatBotController.class.getName());
 
-        parameters.forEach((k,v) -> logger.info("Key = "+k+ ", Value = " +v));
+        requestParameters.forEach((k, v) -> logger.info("Key = " + k + ", Value = " + v));
 
-        Map<String, String> offersMap = viewOffers();
-        StringBuilder jobOpeningsStringBuilder = new StringBuilder();
+        switch (requestParameters.get("body")) {
+            case "view":
+                break;
 
-        if (!offersMap.isEmpty()) {
-            int jobId = 1;
-            jobOpeningsStringBuilder.append("Welcome to Ideas2It! \nWant to be Part of our great team, We're hiring for \n");
-            String firstPosition = null;
-            for (Map.Entry<String, String> entry : offersMap.entrySet()) {
-                if(jobId==1)
-                {
-                    firstPosition = entry.getValue();
+            default: {
+                Map<String, String> offersMap = viewOffers();
+                StringBuilder jobOpeningsStringBuilder = new StringBuilder();
+
+                if (!offersMap.isEmpty()) {
+                    int jobId = 1;
+                    jobOpeningsStringBuilder.append("Welcome to Ideas2It! \nWant to be Part of our great team, We're hiring for \n");
+                    String firstPosition = null;
+                    for (Map.Entry<String, String> entry : offersMap.entrySet()) {
+                        if (jobId == 1) {
+                            firstPosition = entry.getValue();
+                        }
+                        jobOpeningsStringBuilder.append(jobId++);
+                        jobOpeningsStringBuilder.append(". ");
+                        jobOpeningsStringBuilder.append(entry.getValue());
+                        jobOpeningsStringBuilder.append("\n");
+                    }
+                    jobOpeningsStringBuilder.append("\nReply with your option to apply \n\nExample : Reply 1 to apply for ")
+                            .append(firstPosition);
+                } else {
+                    jobOpeningsStringBuilder.append("Thanks for Reaching to us, Presently there are no openings - Ideas2it HR Team");
                 }
-                jobOpeningsStringBuilder.append(jobId++);
-                jobOpeningsStringBuilder.append(". ");
-                jobOpeningsStringBuilder.append(entry.getValue());
-                jobOpeningsStringBuilder.append("\n");
-            }
-            jobOpeningsStringBuilder.append("\nReply with your option to apply \n\nExample : Reply 1 to apply for ")
-                    .append(firstPosition);
-        } else {
-            jobOpeningsStringBuilder.append("Thanks for Reaching to us, Presently there are no openings - Ideas2it HR Team");
-        }
 
-        Body body = new Body
-                .Builder(jobOpeningsStringBuilder.toString())
-                .build();
-        Message whatsappMessage = new Message
-                .Builder()
-                .body(body)
-                .build();
-        MessagingResponse twiml = new MessagingResponse
-                .Builder()
-                .message(whatsappMessage)
-                .build();
-        return twiml.toXml();
+                Body body = new Body
+                        .Builder(jobOpeningsStringBuilder.toString())
+                        .build();
+                Message whatsappMessage = new Message
+                        .Builder()
+                        .body(body)
+                        .build();
+                MessagingResponse twiml = new MessagingResponse
+                        .Builder()
+                        .message(whatsappMessage)
+                        .build();
+                return twiml.toXml();
+            }
+        }
+        return null;
     }
 
     /**
      * Available position in organization.
      *
      * @return Return a list of Offers as in MAP
-     * @throws IOException Exception
+     * @throws IOException          Exception
      * @throws InterruptedException Exception
      */
     //FIXME
@@ -113,7 +121,7 @@ public class TwoWayBusinessChatBotController {
      * new candidate creation
      *
      * @return Response from Recuruitee
-     * @throws IOException Exception
+     * @throws IOException          Exception
      * @throws InterruptedException Exception
      */
     private CompletableFuture<String> createCandidate() throws IOException, InterruptedException {
