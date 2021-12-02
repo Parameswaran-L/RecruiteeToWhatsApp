@@ -39,7 +39,7 @@ public class TwoWayBusinessChatBotController {
 
         requestParameters.forEach((k, v) -> logger.info("Key = " + k + ", Value = " + v));
 
-        switch (requestParameters.get("body")) {
+        switch (requestParameters.get("Body")) {
             case "view":
                 break;
 
