@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/chatbot")
 public class TwoWayBusinessChatBotController {
-    final String ACCOUNT_SID = "AC441d5adf730e937ea1a895fa490449d9";
-    final String AUTH_TOKEN = "d80a19dd7e0435fa59184490d399e880";
+    final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
+    final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @PostMapping(produces = MediaType.APPLICATION_XML_VALUE)

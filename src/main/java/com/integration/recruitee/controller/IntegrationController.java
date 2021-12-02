@@ -14,8 +14,8 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping("/integration")
 public class IntegrationController {
-    final String ACCOUNT_SID = "AC441d5adf730e937ea1a895fa490449d9";
-    final String AUTH_TOKEN = "563c0db77794db96848c45d4e08ebab6";
+    final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
+    final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @GetMapping("/api")
