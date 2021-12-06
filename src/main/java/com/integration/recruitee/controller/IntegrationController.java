@@ -6,6 +6,7 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,11 +21,13 @@ public class IntegrationController {
     final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
-    @GetMapping("/api")
+    @PostMapping("/api")
     public CompletableFuture<String> integrationByRecrutiee(@RequestBody RecrutieeResponse recrutieeResponse) {
 
         //Important
         Payload payload = recrutieeResponse.getPayload();
+        if(payload!=null)
+        {
         String ToPipeLine = payload.getDetails().getToStage().getName();
         String candidateName = payload.getCandidate().getName();
         String contactNo = payload.getCandidate().getPhones().get(0).toString();
@@ -109,6 +112,7 @@ public class IntegrationController {
                         + "wish you the very best!";
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
+        }
         }
         return null;
     }
