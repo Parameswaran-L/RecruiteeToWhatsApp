@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/integration")
+@RequestMapping("/recrutiee")
 @ResponseStatus(HttpStatus.OK)
 public class IntegrationController {
     final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
     final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
-    @PostMapping("/api")
-    public CompletableFuture<String> integrationByRecrutiee(@RequestBody RecrutieeResponse recrutieeResponse) {
+    @PostMapping("/pipelinechange")
+    public CompletableFuture<String> pipeLinechange (@RequestBody RecrutieeResponse recrutieeResponse) {
 
         //Important
         Payload payload = recrutieeResponse.getPayload();
@@ -115,6 +115,22 @@ public class IntegrationController {
         }
         }
         return null;
+    }
+
+    @PostMapping("/applied")
+    public CompletableFuture<String> candidateApplied(@RequestBody RecrutieeResponse recrutieeResponse) {
+
+        //Important
+        Payload payload = recrutieeResponse.getPayload();
+        if (payload != null) {
+            String candidateName = payload.getCandidate().getName();
+            String contactNo = payload.getCandidate().getPhones().get(0).toString();
+            String appliedPosition = payload.getOffer().getTitle();
+            String companyName = payload.getCompany().getName();
+            String message = "Hi " + candidateName + "\n" +
+                    "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
+            callTwilioWhatsappAPI(contactNo, message);
+        }
     }
 
     private void callTwilioWhatsappAPI(String contactNo, String messageBody) {
