@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/integration")
+@ResponseStatus(HttpStatus.OK)
 public class IntegrationController {
     final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
     final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
@@ -108,7 +109,6 @@ public class IntegrationController {
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
         }
-
         return null;
     }
 
