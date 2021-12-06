@@ -2,16 +2,16 @@ package com.integration.recruitee.controller;
 
 import com.integration.recruitee.model.Payload;
 import com.integration.recruitee.model.RecrutieeResponse;
+import com.integration.recruitee.model.apply.AppliedRecrutieeResponse;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
+import java.util.concurrent.CompletableFuture;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/recrutiee")
@@ -118,10 +118,10 @@ public class IntegrationController {
     }
 
     @PostMapping("/applied")
-    public CompletableFuture<String> candidateApplied(@RequestBody RecrutieeResponse recrutieeResponse) {
+    public CompletableFuture<String> candidateApplied(@RequestBody AppliedRecrutieeResponse recrutieeResponse) {
 
         //Important
-        Payload payload = recrutieeResponse.getPayload();
+        com.integration.recruitee.model.apply.Payload payload = recrutieeResponse.getPayload();
         if (payload != null) {
             String candidateName = payload.getCandidate().getName();
             String contactNo = payload.getCandidate().getPhones().get(0).toString();
