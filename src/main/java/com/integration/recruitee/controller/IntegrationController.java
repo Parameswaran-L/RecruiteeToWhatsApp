@@ -125,7 +125,7 @@ public class IntegrationController {
         if (payload != null) {
             String candidateName = payload.getCandidate().getName();
             String contactNo = payload.getCandidate().getPhones().get(0).toString();
-            String appliedPosition = payload.getOffers().getTitle();
+            String appliedPosition = payload.getOffers().get(0).getTitle();
             String companyName = payload.getCompany().getName();
             String message = "Hi " + candidateName + "\n" +
                     "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
