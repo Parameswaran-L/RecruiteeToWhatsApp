@@ -1,5 +1,5 @@
 
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.pipeLineChange;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.Map;
     "name"
 })
 @Data
-public class Company {
+public class Tag {
 
     @JsonProperty("id")
     public Integer id;

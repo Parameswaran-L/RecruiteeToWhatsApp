@@ -1,20 +1,18 @@
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.offerResponse;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
-import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "offers"
+        "length"
 })
 @Data
-public class OfferResponse {
+public class Options {
 
-    @JsonProperty("offers")
-    public List<Offers> offers;
-
+    @JsonProperty("length")
+    public int length;
 
 }

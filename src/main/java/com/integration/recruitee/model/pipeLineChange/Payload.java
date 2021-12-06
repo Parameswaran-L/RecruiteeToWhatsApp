@@ -1,24 +1,34 @@
 
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.pipeLineChange;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "id",
-    "name"
+    "candidate",
+    "company",
+    "details",
+    "offer"
 })
-@Data
-public class FromStage {
+public class Payload {
 
-    @JsonProperty("id")
-    public Integer id;
-    @JsonProperty("name")
-    public String name;
+    @JsonProperty("candidate")
+    public Candidate candidate;
+    @JsonProperty("company")
+    public Company company;
+    @JsonProperty("details")
+    public Details details;
+    @JsonProperty("offer")
+    public Offer offer;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

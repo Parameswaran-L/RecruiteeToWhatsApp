@@ -1,5 +1,5 @@
 
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.pipeLineChange;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
@@ -9,16 +9,16 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "from_stage",
-    "to_stage"
+    "id",
+    "name"
 })
 @Data
-public class Details {
+public class Department {
 
-    @JsonProperty("from_stage")
-    public FromStage fromStage;
-    @JsonProperty("to_stage")
-    public ToStage toStage;
+    @JsonProperty("id")
+    public Integer id;
+    @JsonProperty("name")
+    public String name;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

@@ -1,5 +1,5 @@
 
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.pipeLineChange;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
@@ -11,31 +11,34 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "created_at",
-    "department",
+    "emails",
     "id",
-    "kind",
-    "slug",
-    "tags",
-    "title",
+    "name",
+    "phones",
+    "photo_thumb_url",
+    "referrer",
+    "source",
     "updated_at"
 })
 @Data
-public class Offer {
+public class Candidate {
 
     @JsonProperty("created_at")
     public String createdAt;
-    @JsonProperty("department")
-    public Department department;
+    @JsonProperty("emails")
+    public List<String> emails = null;
     @JsonProperty("id")
     public Integer id;
-    @JsonProperty("kind")
-    public String kind;
-    @JsonProperty("slug")
-    public String slug;
-    @JsonProperty("tags")
-    public List<Tag> tags = null;
-    @JsonProperty("title")
-    public String title;
+    @JsonProperty("name")
+    public String name;
+    @JsonProperty("phones")
+    public List<Object> phones = null;
+    @JsonProperty("photo_thumb_url")
+    public String photoThumbUrl;
+    @JsonProperty("referrer")
+    public Object referrer;
+    @JsonProperty("source")
+    public String source;
     @JsonProperty("updated_at")
     public String updatedAt;
     @JsonIgnore

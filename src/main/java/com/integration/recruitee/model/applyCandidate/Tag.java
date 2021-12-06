@@ -1,5 +1,5 @@
 
-package com.integration.recruitee.model.apply;
+package com.integration.recruitee.model.applyCandidate;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;

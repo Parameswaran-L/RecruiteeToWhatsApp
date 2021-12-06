@@ -1,5 +1,5 @@
 
-package com.integration.recruitee.model.apply;
+package com.integration.recruitee.model.applyCandidate;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -8,28 +8,40 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "candidate",
-    "company",
-    "offers"
+    "created_at",
+    "department",
+    "id",
+    "kind",
+    "slug",
+    "tags",
+    "title",
+    "updated_at"
 })
-public class Payload {
+@Data
+public class Offers {
 
-    @JsonProperty("candidate")
-    public Candidate candidate;
-    @JsonProperty("company")
-    public Company company;
-    @JsonProperty("offers")
-    public Offers offers;
+    @JsonProperty("created_at")
+    public String createdAt;
+    @JsonProperty("department")
+    public Department department;
+    @JsonProperty("id")
+    public Integer id;
+    @JsonProperty("kind")
+    public String kind;
+    @JsonProperty("slug")
+    public String slug;
+    @JsonProperty("tags")
+    public List<Tag> tags = null;
+    @JsonProperty("title")
+    public String title;
+    @JsonProperty("updated_at")
+    public String updatedAt;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

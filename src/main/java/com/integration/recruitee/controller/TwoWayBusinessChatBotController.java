@@ -2,8 +2,8 @@ package com.integration.recruitee.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.integration.recruitee.model.OfferResponse;
-import com.integration.recruitee.model.Offers;
+import com.integration.recruitee.model.offerResponse.OfferResponse;
+import com.integration.recruitee.model.offerResponse.Offers;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.twiml.messaging.Message;

@@ -1,46 +1,24 @@
 
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.pipeLineChange;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "created_at",
-    "emails",
     "id",
-    "name",
-    "phones",
-    "photo_thumb_url",
-    "referrer",
-    "source",
-    "updated_at"
+    "name"
 })
 @Data
-public class Candidate {
+public class Company {
 
-    @JsonProperty("created_at")
-    public String createdAt;
-    @JsonProperty("emails")
-    public List<String> emails = null;
     @JsonProperty("id")
     public Integer id;
     @JsonProperty("name")
     public String name;
-    @JsonProperty("phones")
-    public List<Object> phones = null;
-    @JsonProperty("photo_thumb_url")
-    public String photoThumbUrl;
-    @JsonProperty("referrer")
-    public Object referrer;
-    @JsonProperty("source")
-    public String source;
-    @JsonProperty("updated_at")
-    public String updatedAt;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

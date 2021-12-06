@@ -1,4 +1,4 @@
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.offerResponse;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

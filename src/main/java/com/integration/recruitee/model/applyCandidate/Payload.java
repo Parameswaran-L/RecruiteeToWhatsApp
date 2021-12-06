@@ -1,13 +1,17 @@
 
-package com.integration.recruitee.model;
+package com.integration.recruitee.model.applyCandidate;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -16,8 +20,7 @@ import java.util.Map;
 @JsonPropertyOrder({
     "candidate",
     "company",
-    "details",
-    "offer"
+    "offers"
 })
 public class Payload {
 
@@ -25,10 +28,8 @@ public class Payload {
     public Candidate candidate;
     @JsonProperty("company")
     public Company company;
-    @JsonProperty("details")
-    public Details details;
-    @JsonProperty("offer")
-    public Offer offer;
+    @JsonProperty("offers")
+    public Offers offers;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

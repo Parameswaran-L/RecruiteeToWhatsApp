@@ -1,8 +1,8 @@
 package com.integration.recruitee.controller;
 
-import com.integration.recruitee.model.Payload;
-import com.integration.recruitee.model.RecrutieeResponse;
-import com.integration.recruitee.model.apply.AppliedRecrutieeResponse;
+import com.integration.recruitee.model.pipeLineChange.Payload;
+import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
+import com.integration.recruitee.model.applyCandidate.AppliedRecrutieeResponse;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +25,7 @@ public class IntegrationController {
     public CompletableFuture<String> pipeLinechange (@RequestBody RecrutieeResponse recrutieeResponse) {
 
         //Important
-        Payload payload = recrutieeResponse.getPayload();
+      Payload payload = recrutieeResponse.getPayload();
         if(payload!=null)
         {
         String ToPipeLine = payload.getDetails().getToStage().getName();
@@ -121,7 +121,7 @@ public class IntegrationController {
     public CompletableFuture<String> candidateApplied(@RequestBody AppliedRecrutieeResponse recrutieeResponse) {
 
         //Important
-        com.integration.recruitee.model.apply.Payload payload = recrutieeResponse.getPayload();
+        com.integration.recruitee.model.applyCandidate.Payload payload = recrutieeResponse.getPayload();
         if (payload != null) {
             String candidateName = payload.getCandidate().getName();
             String contactNo = payload.getCandidate().getPhones().get(0).toString();
