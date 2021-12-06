@@ -7,10 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.integration.recruitee.model.Candidate;
-import com.integration.recruitee.model.Company;
-import com.integration.recruitee.model.Details;
-import com.integration.recruitee.model.Offer;
+import com.integration.recruitee.model.apply.Candidate;
+import com.integration.recruitee.model.apply.Company;
+import com.integration.recruitee.model.apply.Offer;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,6 @@ import lombok.NoArgsConstructor;
 @JsonPropertyOrder({
     "candidate",
     "company",
-    "details",
     "offers"
 })
 public class Payload {
@@ -33,8 +31,6 @@ public class Payload {
     public Candidate candidate;
     @JsonProperty("company")
     public Company company;
-    @JsonProperty("details")
-    public Details details;
     @JsonProperty("offers")
     public Offer offer;
     @JsonIgnore
