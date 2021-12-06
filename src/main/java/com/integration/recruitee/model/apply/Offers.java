@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.integration.recruitee.model.apply.Department;
-import com.integration.recruitee.model.apply.Tag;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,7 @@ import lombok.Data;
     "updated_at"
 })
 @Data
-public class Offer {
+public class Offers {
 
     @JsonProperty("created_at")
     public String createdAt;
