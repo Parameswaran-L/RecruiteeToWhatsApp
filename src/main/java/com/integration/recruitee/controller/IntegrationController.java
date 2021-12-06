@@ -131,6 +131,7 @@ public class IntegrationController {
                     "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
             callTwilioWhatsappAPI(contactNo, message);
         }
+        return null;
     }
 
     private void callTwilioWhatsappAPI(String contactNo, String messageBody) {
