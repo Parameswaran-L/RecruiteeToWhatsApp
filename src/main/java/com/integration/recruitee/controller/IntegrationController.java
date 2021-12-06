@@ -4,11 +4,12 @@ import com.integration.recruitee.model.Payload;
 import com.integration.recruitee.model.RecrutieeResponse;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import java.net.http.*;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
