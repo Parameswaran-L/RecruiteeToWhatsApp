@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +27,6 @@ public class Payload {
     @JsonProperty("company")
     public Company company;
     @JsonProperty("offers")
-    public Offers offers;
+    public List<Offers> offers;
 
 }

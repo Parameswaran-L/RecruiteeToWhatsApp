@@ -40,5 +40,5 @@ public class AppliedRecrutieeResponse {
     public Integer id;
     @JsonProperty("payload")
     public Payload payload;
-
+  
 }
