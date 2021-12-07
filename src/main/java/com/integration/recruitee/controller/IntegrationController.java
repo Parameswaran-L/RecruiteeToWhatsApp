@@ -50,7 +50,7 @@ public class IntegrationController {
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
             case "Ideas2IT | L1 Interview":
-                message = "Hi " + candidateName + "\n"
+                message = "Hi  " + candidateName + "\n"
                         + "\n" + "Congratulations!\n"
                         + "\n" + "It was great connecting with you. "
                         + "Your Profile has been shortlisted for L1 interview process."
@@ -58,10 +58,10 @@ public class IntegrationController {
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
             case "Final Interview":
-                message = "Hi" + candidateName + "\n" +
+                message = "Hi " + candidateName + "\n" +
                         "\n" + "Congratulations!\n" +
-                        "\n" + "!!! Your have cleared L1 interview.Google meet invitation will be sent to " +
-                        "your register mail address.";
+                        "\n" + "Your have cleared L1 interview.Google meet invitation will be sent to " +
+                        "your register mail address for next round.";
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
             case "Rejection":
