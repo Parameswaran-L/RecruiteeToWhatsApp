@@ -128,22 +128,20 @@ public class TwoWayBusinessChatBotController {
      * @throws IOException          Exception
      * @throws InterruptedException Exception
      */
-    private CompletableFuture<String> createCandidate() throws IOException, InterruptedException {
-        //FIXME
-        //receiving data from whatsapp response.(As of now values are hardcoded)
-        //RequestBody
-        //FIXME
-        String slug = viewOffers().get("Business Analyst");
+    @RequestMapping("/createoffer")
+    public CompletableFuture<String> createCandidate(Map<String, String> bodyParam) throws IOException, InterruptedException {
+       //Body from dialog flow.
+        /**
+         String slug = viewOffers().get("Business Analyst");
         Map<String, String> bodyParam = new HashMap<>();
         bodyParam.put("name", "sample2");
         bodyParam.put("email", "sample@gmail.com");
         bodyParam.put("phone", "1234567890");
         bodyParam.put("remote_cv_url", "C:\\Users\\Kowshik Bharathi M\\Desktop\\samplepdf");
-
+         **/
         String requestBody = new ObjectMapper()
                 .writerWithDefaultPrettyPrinter()
                 .writeValueAsString(bodyParam);
-
         // Create HTTP request object
         HttpRequest request = HttpRequest
                 .newBuilder()
