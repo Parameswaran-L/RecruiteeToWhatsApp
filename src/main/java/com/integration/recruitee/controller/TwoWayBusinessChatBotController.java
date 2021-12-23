@@ -131,8 +131,9 @@ public class TwoWayBusinessChatBotController {
     @RequestMapping("/createoffer")
     public CompletableFuture<String> createCandidate(Map<String, String> bodyParam) throws IOException, InterruptedException {
        //Body from dialog flow.
+        String slug = bodyParam.get("slug") ;
         /**
-         String slug = viewOffers().get("Business Analyst");
+
         Map<String, String> bodyParam = new HashMap<>();
         bodyParam.put("name", "sample2");
         bodyParam.put("email", "sample@gmail.com");
