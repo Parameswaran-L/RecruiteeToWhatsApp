@@ -2,8 +2,11 @@ package com.integration.recruitee.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integration.recruitee.model.applyCandidate.CreateCandidate;
 import com.integration.recruitee.model.offerResponse.OfferResponse;
 import com.integration.recruitee.model.offerResponse.Offers;
+import com.integration.recruitee.model.pipeLineChange.Payload;
+import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.twiml.messaging.Message;
@@ -98,7 +101,7 @@ public class TwoWayBusinessChatBotController {
     private Map<String, String> viewOffers() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create("https://ideas2ittechnologies.recruitee.com/api/offers/"))
+                .uri(URI.create("https://ideas2ithackathon.recruitee.com/api/offers/"))
                 .GET()
                 .header("Accept", "application/json")
                 .build();
@@ -128,28 +131,21 @@ public class TwoWayBusinessChatBotController {
      * @throws IOException          Exception
      * @throws InterruptedException Exception
      */
-    @RequestMapping("/createoffer")
-    public CompletableFuture<String> createCandidate(Map<String, String> bodyParam) throws IOException, InterruptedException {
-       //Body from dialog flow.
-        String slug = bodyParam.get("slug") ;
-        /**
-
-        Map<String, String> bodyParam = new HashMap<>();
-        bodyParam.put("name", "sample2");
-        bodyParam.put("email", "sample@gmail.com");
-        bodyParam.put("phone", "1234567890");
-        bodyParam.put("remote_cv_url", "C:\\Users\\Kowshik Bharathi M\\Desktop\\samplepdf");
-         **/
+    @RequestMapping("/createcandidate")
+    public CompletableFuture<String> createCandidate(@RequestBody CreateCandidate createCandidate) throws IOException, InterruptedException {
+        String slug =  createCandidate.getSlug() ;
+        System.out.println("Create Candidate ===>"+ slug);
+        Map<String, Map<String, String>> req = new HashMap<>();
+        req.put("candidate", createCandidate.getCandidate());
         String requestBody = new ObjectMapper()
-                .writerWithDefaultPrettyPrinter()
-                .writeValueAsString(bodyParam);
-        // Create HTTP request object
-        HttpRequest request = HttpRequest
-                .newBuilder()
-                .uri(URI.create("https://ideas2ittechnologies.recruitee.com/api/offers/" + slug + "/candidates"))
-                .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
-                .header("accept", "application/json")
+                .writeValueAsString(req);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://ideas2ithackathon.recruitee.com/api/offers/java-developer/candidates"))
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
+        System.out.println(requestBody);
         return HttpClient
                 .newHttpClient()
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString())
