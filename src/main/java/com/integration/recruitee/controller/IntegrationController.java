@@ -1,12 +1,9 @@
 package com.integration.recruitee.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.integration.recruitee.model.offerResponse.OfferResponse;
 import com.integration.recruitee.model.pipeLineChange.Payload;
 import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
 import com.integration.recruitee.model.applyCandidate.AppliedRecrutieeResponse;
-import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 
 import java.net.URI;
@@ -24,27 +21,24 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/recrutiee")
+@RequestMapping("/recruitee")
 @ResponseStatus(HttpStatus.OK)
 public class IntegrationController {
-    final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
-    final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
     final String NODE_API = "http://localhost:8000";
-    final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @PostMapping("/pipelinechange")
-    public CompletableFuture<String> pipeLinechange (@RequestBody RecrutieeResponse recrutieeResponse) {
+    public CompletableFuture<String> pipelineChange (@RequestBody RecrutieeResponse recrutieeResponse) {
 
         //Important
       Payload payload = recrutieeResponse.getPayload();
-        if(payload!=null)
+        if(payload != null)
         {
         String ToPipeLine = payload.getDetails().getToStage().getName();
         String candidateName = payload.getCandidate().getName();
         String contactNo = payload.getCandidate().getPhones().get(0).toString();
         String appliedPosition = payload.getOffer().getTitle();
         String companyName = payload.getCompany().getName();
-        String message = "";
+        String message;
 
         switch (ToPipeLine) {
             case "Applied":
@@ -106,13 +100,9 @@ public class IntegrationController {
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
             case "Ideas2IT: Immediate Joiners":
-                break;
-            case "Ideas2IT: DOJ in 1 month":
-                break;
-            case "Ideas2IT: DOJ in 2 month":
-                break;
             case "Ideas2IT: DOJ in 3 month":
-                break;
+            case "Ideas2IT: DOJ in 1 month":
+            case "Ideas2IT: DOJ in 2 month":
             case "Ideas2IT: DOJ in 15 days":
                 break;
             case "Declined":
@@ -128,9 +118,9 @@ public class IntegrationController {
     }
 
     @PostMapping("/applied")
-    public CompletableFuture<String> candidateApplied(@RequestBody AppliedRecrutieeResponse recrutieeResponse) {
+    public CompletableFuture<String> candidateApplied(@RequestBody AppliedRecrutieeResponse recruiteeResponse) {
         //Important
-        com.integration.recruitee.model.applyCandidate.Payload payload = recrutieeResponse.getPayload();
+        com.integration.recruitee.model.applyCandidate.Payload payload = recruiteeResponse.getPayload();
         if (payload != null) {
             String candidateName = payload.getCandidate().getName();
             String contactNo = payload.getCandidate().getPhones().get(0).toString();

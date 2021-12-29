@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.integration.recruitee.model.applyCandidate.CreateCandidate;
 import com.integration.recruitee.model.offerResponse.OfferResponse;
 import com.integration.recruitee.model.offerResponse.Offers;
-import com.integration.recruitee.model.pipeLineChange.Payload;
-import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.twiml.messaging.Message;
@@ -16,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,17 +23,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chatbot")
 public class TwoWayBusinessChatBotController {
-    final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
-    final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
-    final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @PostMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public String sendWelcomeMessage(@RequestParam Map<String, String> requestParameters) throws IOException, InterruptedException {
@@ -112,16 +105,13 @@ public class TwoWayBusinessChatBotController {
         String json = response.body();
         OfferResponse offerResponse = new ObjectMapper()
                 .readValue(json, OfferResponse.class);
-        List<Offers> offersList = offerResponse
-                .getOffers()
-                .stream()
-                .collect(Collectors.toList());
+        List<Offers> offersList = new ArrayList<>(offerResponse
+                .getOffers());
         //jobRoles contain slug & job title
-        Map<String, String> jobRoles = offersList
+        //after choosing from whatsapp reply we can chose slug in this map.
+        return offersList
                 .stream()
                 .collect(Collectors.toMap(Offers::getSlug, Offers::getTitle));
-        //after choosing from whatsapp reply we can chose slug in this map.
-        return jobRoles;
     }
 
     /**
@@ -129,10 +119,9 @@ public class TwoWayBusinessChatBotController {
      *
      * @return Response from Recuruitee
      * @throws IOException          Exception
-     * @throws InterruptedException Exception
      */
     @RequestMapping("/createcandidate")
-    public CompletableFuture<String> createCandidate(@RequestBody CreateCandidate createCandidate) throws IOException, InterruptedException {
+    public CompletableFuture<String> createCandidate(@RequestBody CreateCandidate createCandidate) throws IOException {
         String slug =  createCandidate.getSlug() ;
         System.out.println("Create Candidate ===>"+ slug);
         Map<String, Map<String, String>> req = new HashMap<>();
