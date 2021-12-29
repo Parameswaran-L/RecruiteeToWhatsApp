@@ -1,10 +1,20 @@
 package com.integration.recruitee.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integration.recruitee.model.offerResponse.OfferResponse;
 import com.integration.recruitee.model.pipeLineChange.Payload;
 import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
 import com.integration.recruitee.model.applyCandidate.AppliedRecrutieeResponse;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class IntegrationController {
     final String ACCOUNT_SID = System.getenv("ACCOUNT_SID");
     final String AUTH_TOKEN = System.getenv("AUTH_TOKEN");
+    final String NODE_API = "http://localhost:8000";
     final String TWILIO_SANDBOX_NUMBER = "whatsapp:+14155238886";
 
     @PostMapping("/pipelinechange")
@@ -72,7 +83,6 @@ public class IntegrationController {
                         + "Often there are some special needs for a particular role that influences this decision.";
                 callTwilioWhatsappAPI(contactNo, message);
                 break;
-
             case "HR Discussion":
                 message = "Hi " + candidateName + "\n"
                         + "\n" + "Congratulations!\n"
@@ -119,7 +129,6 @@ public class IntegrationController {
 
     @PostMapping("/applied")
     public CompletableFuture<String> candidateApplied(@RequestBody AppliedRecrutieeResponse recrutieeResponse) {
-
         //Important
         com.integration.recruitee.model.applyCandidate.Payload payload = recrutieeResponse.getPayload();
         if (payload != null) {
@@ -135,13 +144,29 @@ public class IntegrationController {
     }
 
     private void callTwilioWhatsappAPI(String contactNo, String messageBody) {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        Message message = Message.creator(
-                new com.twilio.type.PhoneNumber("whatsapp:+91" + contactNo),
-                new com.twilio.type.PhoneNumber(TWILIO_SANDBOX_NUMBER),
-                messageBody)
-                .create();
-
-        System.out.println("Message Sent Successfully, SID: " + message.getSid());
+        Map<String, String> bodyParam = new HashMap<>();
+        bodyParam.put("message", messageBody);
+        bodyParam.put("waId", contactNo);
+        try {
+            String requestBody = new ObjectMapper()
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(bodyParam);
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(URI.create(NODE_API + "/sendMessage"))
+                    .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .build();
+            HttpResponse<String> response = HttpClient
+                    .newHttpClient()
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+            String json = response.body();
+            Message message = new ObjectMapper()
+                    .readValue(json, Message.class);
+            System.out.println("Message Sent Successfully, SID: " + message.getSid());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
