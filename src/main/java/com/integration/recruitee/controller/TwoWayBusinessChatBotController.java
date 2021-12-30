@@ -2,9 +2,12 @@ package com.integration.recruitee.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integration.recruitee.model.feedback.Candidate;
+import com.integration.recruitee.model.feedback.FeedBack;
 import com.integration.recruitee.model.applyCandidate.CreateCandidate;
 import com.integration.recruitee.model.offerResponse.OfferResponse;
 import com.integration.recruitee.model.offerResponse.Offers;
+import com.integration.recruitee.repository.CandidateRepository;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.twiml.messaging.Message;
@@ -22,12 +25,16 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chatbot")
 public class TwoWayBusinessChatBotController {
+
+    @Autowired
+    private CandidateRepository repo;
 
     @PostMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public String sendWelcomeMessage(@RequestParam Map<String, String> requestParameters) throws IOException, InterruptedException {
@@ -139,5 +146,18 @@ public class TwoWayBusinessChatBotController {
                 .newHttpClient()
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body);
+    }
+
+    //Need to check
+    @PostMapping("/collectfeedback")
+    public String collectFeedback(@RequestBody FeedBack feedback){
+        Long contactNo = Long.valueOf(feedback.getPhone());
+        String rating = feedback.getRating();
+        String review = feedback.getReview();
+        Candidate existingCandidate = repo.findCandidateByContactNo(contactNo);
+        existingCandidate.setRating(rating);
+        existingCandidate.setReview(review);
+        repo.save(existingCandidate);
+        return "Updated FeedBack Successfully";
     }
 }

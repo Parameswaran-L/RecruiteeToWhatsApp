@@ -1,7 +1,7 @@
 package com.integration.recruitee.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.integration.recruitee.model.Candidate;
+import com.integration.recruitee.model.feedback.Candidate;
 import com.integration.recruitee.model.pipeLineChange.Payload;
 import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
 import com.integration.recruitee.model.applyCandidate.AppliedRecrutieeResponse;
@@ -83,6 +83,7 @@ public class IntegrationController {
                         + "Unfortunately, our team did not select you for further consideration. "
                         + "Often there are some special needs for a particular role that influences this decision.";
                 callTwilioWhatsappAPI(contactNo, message);
+                collectFeedback(contactNo);
                 break;
             case "HR Discussion":
                 message = "Hi " + candidateName + "\n"
@@ -105,6 +106,7 @@ public class IntegrationController {
                         + "\n" + "Congratulations on your offer from Ideas2IT! We are excited to bring you on board. "
                         + "Your offer letter is shared to your registered mail address";
                 callTwilioWhatsappAPI(contactNo, message);
+                collectFeedback(contactNo);
                 break;
             case "Ideas2IT: Immediate Joiners":
             case "Ideas2IT: DOJ in 3 month":
@@ -125,14 +127,12 @@ public class IntegrationController {
     }
 
     private void saveCandidate(Payload payload) {
-        Integer candidateId = payload.getCandidate().getId();
         String candidateName = payload.getCandidate().getName();
         String contactNo = payload.getCandidate().getPhones().get(0).toString();
         String email = payload.getCandidate().getEmails().get(0);
         Candidate candidate = new Candidate();
-        candidate.setId(candidateId);
+        candidate.setContactNo(Long.valueOf(contactNo));
         candidate.setName(candidateName);
-        candidate.setPhoneNumber(contactNo);
         candidate.setEmail(email);
 
         repo.save(candidate);
@@ -176,6 +176,32 @@ public class IntegrationController {
             Message message = new ObjectMapper()
                     .readValue(json, Message.class);
             System.out.println("Message Sent Successfully, SID: " + message.getSid());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Need to check
+    private void collectFeedback(String contactNo) {
+        Map<String, String> bodyParam = new HashMap<>();
+        bodyParam.put("eventName", "collect_feedback");
+        bodyParam.put("waId", contactNo);
+        try {
+            String requestBody = new ObjectMapper()
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(bodyParam);
+            HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create(NODE_API + "/eventTrigger"))
+                .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+            HttpResponse<String> response = HttpClient
+                .newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+            String json = response.body();
+            System.out.println("Feedback response: " + json);
         } catch (Exception e) {
             e.printStackTrace();
         }
