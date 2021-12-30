@@ -1,9 +1,11 @@
 package com.integration.recruitee.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integration.recruitee.model.Candidate;
 import com.integration.recruitee.model.pipeLineChange.Payload;
 import com.integration.recruitee.model.pipeLineChange.RecrutieeResponse;
 import com.integration.recruitee.model.applyCandidate.AppliedRecrutieeResponse;
+import com.integration.recruitee.repository.CandidateRepository;
 import com.twilio.rest.api.v2010.account.Message;
 
 import java.net.URI;
@@ -13,6 +15,8 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseStatus(HttpStatus.OK)
 public class IntegrationController {
     final String NODE_API = "http://localhost:8000";
+
+    @Autowired
+    private CandidateRepository repo;
 
     @PostMapping("/pipelinechange")
     public CompletableFuture<String> pipelineChange (@RequestBody RecrutieeResponse recrutieeResponse) {
@@ -39,12 +46,12 @@ public class IntegrationController {
         String appliedPosition = payload.getOffer().getTitle();
         String companyName = payload.getCompany().getName();
         String message;
-
         switch (ToPipeLine) {
             case "Applied":
                 message = "Hi " + candidateName + "\n" +
                         "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
                 callTwilioWhatsappAPI(contactNo, message);
+                saveCandidate(payload);
                 break;
             case "Ideas2IT - Intro":
                 message = "Hi " + candidateName + "\n"
@@ -115,6 +122,20 @@ public class IntegrationController {
         }
         }
         return null;
+    }
+
+    private void saveCandidate(Payload payload) {
+        Integer candidateId = payload.getCandidate().getId();
+        String candidateName = payload.getCandidate().getName();
+        String contactNo = payload.getCandidate().getPhones().get(0).toString();
+        String email = payload.getCandidate().getEmails().get(0);
+        Candidate candidate = new Candidate();
+        candidate.setId(candidateId);
+        candidate.setName(candidateName);
+        candidate.setPhoneNumber(contactNo);
+        candidate.setEmail(email);
+
+        repo.save(candidate);
     }
 
     @PostMapping("/applied")
