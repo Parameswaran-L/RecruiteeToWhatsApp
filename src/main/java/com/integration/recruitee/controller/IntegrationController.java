@@ -51,7 +51,6 @@ public class IntegrationController {
                 message = "Hi " + candidateName + "\n" +
                         "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
                 callTwilioWhatsappAPI(contactNo, message);
-                saveCandidate(payload);
                 break;
             case "Ideas2IT - Intro":
                 message = "Hi " + candidateName + "\n"
@@ -126,7 +125,7 @@ public class IntegrationController {
         return null;
     }
 
-    private void saveCandidate(Payload payload) {
+    private void saveCandidate(com.integration.recruitee.model.applyCandidate.Payload payload) {
         String candidateName = payload.getCandidate().getName();
         String contactNo = payload.getCandidate().getPhones().get(0).toString();
         String email = payload.getCandidate().getEmails().get(0);
@@ -150,6 +149,7 @@ public class IntegrationController {
             String message = "Hi " + candidateName + "\n" +
                     "Thank you for your interest to work at " + companyName + " for the position " + appliedPosition + ". We have received your resume and our team will get back to you shortly.";
             callTwilioWhatsappAPI(contactNo, message);
+            saveCandidate(payload);
         }
         return null;
     }
