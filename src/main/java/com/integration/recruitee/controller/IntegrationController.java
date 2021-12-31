@@ -164,7 +164,7 @@ public class IntegrationController {
                     .writeValueAsString(bodyParam);
             HttpRequest request = HttpRequest
                     .newBuilder()
-                    .uri(URI.create(NODE_API + "/sendMessage"))
+                    .uri(URI.create(NODE_API + "/node/sendMessage"))
                     .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
