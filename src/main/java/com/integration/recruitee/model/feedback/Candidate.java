@@ -22,5 +22,6 @@ public class Candidate implements Serializable  {
     public String email;
     public String rating;
     public String review;
+    public String applicationStatus;
 
 }
