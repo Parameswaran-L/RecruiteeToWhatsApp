@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/recruitee")
 @ResponseStatus(HttpStatus.OK)
 public class IntegrationController {
-    final String NODE_API = "http://localhost:8000";
+    final String NODE_API = "http://localhost:8000/node";
 
     @Autowired
     private CandidateRepository repo;
@@ -164,7 +164,7 @@ public class IntegrationController {
                     .writeValueAsString(bodyParam);
             HttpRequest request = HttpRequest
                     .newBuilder()
-                    .uri(URI.create(NODE_API + "/node/sendMessage"))
+                    .uri(URI.create(NODE_API + "/sendMessage"))
                     .POST((HttpRequest.BodyPublishers.ofString(requestBody)))
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
